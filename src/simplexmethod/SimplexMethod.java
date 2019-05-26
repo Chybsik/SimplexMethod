@@ -138,6 +138,11 @@ public class SimplexMethod {
             }
             System.out.println(tempOut);
         }
+        String tempOut ="";
+        for (int i = 0; i < object.z.length; i++) {
+            tempOut+=object.z[i]+", ";
+        }
+        System.out.println(tempOut);
     }
 
     public String solve() {
@@ -208,7 +213,7 @@ public class SimplexMethod {
 
         iteration(false);
 
-        float[] solution = new float[x + y];
+        float[] solution = new float[x + balanceCount];
         float optimal =0;
         
         for (int i = 0; i < y; i++) {
@@ -295,6 +300,7 @@ public class SimplexMethod {
             if (isSimDifsContainsZero && isBasisSimDifsContainsZero) {
                 System.err.println("Имеется альтернативный оптимум");
                 singleIteration = true;
+                
                 pColumn = temp;
 
                 calcPLine();
@@ -336,7 +342,8 @@ public class SimplexMethod {
             simDif -= func[i];
 
             //Проверка на неограниченость функции
-            if (simDif <= 0) {
+            if (isBelonging(basisIndices,i)) {
+                if (simDif <= 0) {
                 unlimited = true;
                 for (int j = 0; j < y; j++) {
                     unlimited &= matrix[i][j] <= 0;
@@ -347,6 +354,8 @@ public class SimplexMethod {
                     //return;
                 }
             }
+            }
+            
 
             //Направляющий столбец
             if (maximization == 1) {
